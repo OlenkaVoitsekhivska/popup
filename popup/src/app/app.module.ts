@@ -1,15 +1,17 @@
+//MODULES:
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from './shared/shared.module';
 
-import { PopFormModule } from './pop-form/pop-form.module';
+//COMPONENTS:
+import { AppComponent } from './app.component';
 import { DialogComponent } from './shared/components/dialog/dialog.component';
+import { FormComponent } from './form/form.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, BrowserAnimationsModule, PopFormModule],
+  declarations: [AppComponent, FormComponent],
+  imports: [BrowserModule, BrowserAnimationsModule, SharedModule],
   entryComponents: [DialogComponent],
   providers: [],
   bootstrap: [AppComponent],

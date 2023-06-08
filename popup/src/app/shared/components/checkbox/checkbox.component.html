@@ -1,6 +1,12 @@
+<!-- <mat-checkbox
+  class="example-margin"
+  (ngModelChange)="onModelChange($event)"
+  [(ngModel)]="value"
+  >{{ label }}</mat-checkbox
+> -->
 <mat-checkbox
   class="example-margin"
-  (change)="updateValue(value)"
   [(ngModel)]="value"
+  (change)="onModelChange()"
   >{{ label }}</mat-checkbox
 >

@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./chip-list-static.component.scss'],
 })
 export class ChipListStaticComponent {
-  @Input() emails: string[] = [];
+  @Input() public emails: string[] = [];
 }

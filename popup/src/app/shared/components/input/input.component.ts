@@ -14,11 +14,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() label: string = '';
-  @Input() placeholder: string = '';
-  @Input() disabled: boolean = false;
+  @Input() public label: string = '';
+  @Input() public placeholder: string = '';
+  @Input() public disabled: boolean = false;
 
-  value = '';
+  public value = '';
 
   onChange = (val: string) => {};
 

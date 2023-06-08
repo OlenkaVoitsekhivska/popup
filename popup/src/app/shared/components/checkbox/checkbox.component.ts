@@ -14,18 +14,18 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class CheckboxComponent implements ControlValueAccessor {
-  @Input() label: string = '';
+  @Input() public label: string = '';
 
-  value = false;
+  public value = false;
 
   onChange = (val: boolean) => {};
 
   onTouched = () => {};
 
-  updateValue(val: boolean) {
-    console.log('updating checkbox value', val);
-    this.onChange(val);
-  }
+  onModelChange = () => {
+    this.value = !this.value;
+    this.onChange(this.value);
+  };
 
   writeValue(val: boolean) {
     console.log('from checkbox', val);

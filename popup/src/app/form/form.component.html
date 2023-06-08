@@ -9,7 +9,7 @@
             <mat-chip-row
               *ngFor="let email of emailChips"
               (removed)="remove(email)"
-              [editable]="true"
+              [editable]="chipConfig.isEditable"
               (edited)="edit(email, $event)"
             >
               {{ email }}
@@ -35,6 +35,7 @@
       label="submit"
       (customSubmit)="handleSubmitClick()"
     ></app-button>
+    <!-- <button type="submit" (click)="handleSubmitClick()">submit</button> -->
   </app-card>
 
   <app-card *ngIf="existingEmailsForDisplay | async as emails">

@@ -1,11 +1,17 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   Observable,
   Subscription,
   combineLatest,
-  finalize,
+  distinctUntilChanged,
   map,
   switchMap,
   tap,
@@ -16,14 +22,15 @@ import { DialogService } from '../../services/dialog.service';
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent implements OnInit, OnDestroy {
-  form!: FormGroup;
-  existingEmails$!: Observable<string[]>;
-  duplicateEmails$!: Observable<string[]>;
-  newAllEmails$!: Observable<string[]>;
+  public form!: FormGroup;
+  public existingEmails$!: Observable<string[]>;
+  public duplicateEmails$!: Observable<string[]>;
+  public newAllEmails$!: Observable<string[]>;
 
-  submitSubscription!: Subscription;
+  private submitSubscription!: Subscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,51 +43,57 @@ export class DialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  get checkboxState() {
-    return this.form.get('saveAllCheckbox');
-  }
-
   ngOnInit() {
-    this.existingEmails$ = this.dialogService.existing$;
-    this.duplicateEmails$ = this.dialogService.duplicates$;
-    this.newAllEmails$ = this.dialogService.newEmails$;
-  }
-
-  handleSubmit() {
-    this.submitSubscription = combineLatest([
-      this.newAllEmails$,
-      this.existingEmails$,
-      this.duplicateEmails$,
-    ])
-      .pipe(
-        map(([newEms, existingEms, duplicateEms]) => [
-          newEms,
-          existingEms,
-          duplicateEms,
-        ]),
-        tap(([newEms, existingEms]) => {
-          if (this.checkboxState?.value === true) {
-            this.dialogService.writeToExistingEmails(newEms);
-          } else {
-            const filteredNew = [...new Set(newEms)].filter(
-              (em) => !existingEms.includes(em)
-            );
-            this.dialogService.writeToExistingEmails(filteredNew);
-          }
-
-          this.closeDialog();
-        })
-      )
-      .subscribe();
-  }
-
-  closeDialog() {
-    this.dialogRef.close();
+    this.initialize();
   }
 
   ngOnDestroy(): void {
     if (this.submitSubscription) {
       this.submitSubscription.unsubscribe();
     }
+    this.dialogService.nextEmptyIntoNewEmails();
+
+    this.checkboxState.reset();
+    // this.dialogService.toggleDialogState(false);
+
+    console.log('fall of the house ');
+  }
+
+  get checkboxState() {
+    return this.form.get('saveAllCheckbox');
+  }
+
+  handleSubmit() {
+    this.submitSubscription = combineLatest([
+      this.newAllEmails$,
+      this.existingEmails$,
+    ])
+      .pipe(
+        map(([newEms, existingEms]) => [newEms, existingEms]),
+        tap(([newEms, existingEms]) => {
+          if (this.checkboxState.value === true) {
+            this.dialogService.writeToExistingEmails(newEms);
+            // this.closeDialog();
+          } else {
+            const filteredNew = [...new Set(newEms)].filter(
+              (em) => !existingEms.includes(em)
+            );
+            this.dialogService.writeToExistingEmails(filteredNew);
+            // this.closeDialog();
+          }
+          this.closeDialog();
+        })
+      )
+      .subscribe();
+  }
+
+  private closeDialog() {
+    this.dialogRef.close();
+  }
+
+  private initialize() {
+    this.existingEmails$ = this.dialogService.existing$;
+    this.duplicateEmails$ = this.dialogService.duplicates$;
+    this.newAllEmails$ = this.dialogService.newEmails$;
   }
 }

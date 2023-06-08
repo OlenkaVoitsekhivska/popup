@@ -27,14 +27,6 @@
         </div>
       </div>
 
-      <!-- <div *ngIf="newAllEmails$ | async as emails">
-        <div *ngIf="emails.length">
-          <h3>The new {{ emails.length }} emails</h3>
-          <app-input [disabled]="true">
-            <app-chip-list-static [emails]="emails"></app-chip-list-static
-          ></app-input>
-        </div>
-      </div> -->
       <app-card class="notification">
         <mat-card-content>
           <mat-icon
@@ -52,10 +44,13 @@
       <div>
         <mat-divider></mat-divider>
         <h3>How would you like to proceed?</h3>
-        <app-checkbox
+        <!-- <app-checkbox
           label="Save all (duplicated and existing)"
           formControlName="saveAllCheckbox"
-        ></app-checkbox>
+        ></app-checkbox> -->
+        <mat-checkbox formControlName="saveAllCheckbox"
+          >Save all (duplicated and existing)</mat-checkbox
+        >
       </div>
     </form>
   </mat-dialog-content>
@@ -68,9 +63,7 @@
       color="accent"
     ></app-button>
     <app-button
-      label="{{
-        checkboxState?.value ? 'Save all emails' : 'Save only unique'
-      }}"
+      label="{{ checkboxState.value ? 'Save all emails' : 'Save only unique' }}"
       (customSubmit)="handleSubmit()"
     ></app-button>
   </mat-dialog-actions>

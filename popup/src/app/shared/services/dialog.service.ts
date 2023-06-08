@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subject,
+  distinctUntilChanged,
+  shareReplay,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DialogService {
-  existingEmails = [
+  private existingEmails = [
     'johndoe@example.com',
     'alice.smith@example.com',
     'markwilson@example.com',
@@ -15,37 +20,46 @@ export class DialogService {
   private existingForDisplay = new BehaviorSubject<string[]>(
     this.existingEmails
   );
-  existingForDisplay$ = this.existingForDisplay.asObservable();
 
-  private showDialog = new BehaviorSubject<boolean>(false);
-  showDialog$ = this.showDialog.asObservable();
+  public existingForDisplay$ = this.existingForDisplay.asObservable();
+
+  showDialog = new BehaviorSubject<boolean>(false);
+  public showDialog$ = this.showDialog.asObservable();
 
   private newEmail = new BehaviorSubject<string[]>([]);
-  newEmails$ = this.newEmail.asObservable();
+  public newEmails$ = this.newEmail.asObservable();
 
   private duplicates = new BehaviorSubject<string[]>([]);
-  duplicates$ = this.duplicates.asObservable();
+  public duplicates$ = this.duplicates.asObservable();
 
   private existing = new BehaviorSubject<string[]>([]);
-  existing$ = this.existing.asObservable();
+  public existing$ = this.existing.asObservable();
 
   constructor() {}
 
-  toggleDialogState() {
-    this.showDialog.next(false);
+  toggleDialogState(value: boolean): void {
+    this.showDialog.next(value);
+  }
+
+  nextEmptyIntoNewEmails() {
+    this.newEmail.next([]);
   }
 
   handleEmailsArray(emails: string[]) {
     this.newEmail.next(emails);
-    const duplicates = this.findDuplicateEmails(emails);
 
+    const duplicates = this.findDuplicateEmails(emails);
     this.duplicates.next(duplicates);
 
     const existing = this.findCommonEmails(this.existingEmails, emails);
-
     this.existing.next(existing);
 
+    if (!duplicates.length && !existing.length) {
+      this.showDialog.next(false);
+    }
+
     if (duplicates.length > 0 || existing.length > 0) {
+      console.log('dialog condition from service');
       this.showDialog.next(true);
     }
   }
