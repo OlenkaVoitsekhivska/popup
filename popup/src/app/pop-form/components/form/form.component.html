@@ -1,0 +1,46 @@
+<div class="form-view">
+  <app-card>
+    <ng-container *ngIf="newEmails | async as emails">
+      <h2>Submit new emails:</h2>
+      <form action="" [formGroup]="form">
+        <mat-form-field class="chip-list">
+          <mat-label>Enter emails:...</mat-label>
+          <mat-chip-grid #chipGrid color="accent" formControlName="emailsField">
+            <mat-chip-row
+              *ngFor="let email of emailChips"
+              (removed)="remove(email)"
+              [editable]="true"
+              (edited)="edit(email, $event)"
+            >
+              {{ email }}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            <input
+              #input
+              type="email"
+              matInput
+              placeholder="Enter emails..."
+              [matChipInputFor]="chipGrid"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              [matChipInputAddOnBlur]="addOnBlur"
+              (matChipInputTokenEnd)="add($event)"
+            />
+          </mat-chip-grid>
+        </mat-form-field>
+      </form>
+    </ng-container>
+    <app-button
+      label="submit"
+      (customSubmit)="handleSubmitClick()"
+    ></app-button>
+  </app-card>
+
+  <app-card *ngIf="existingEmailsForDisplay | async as emails">
+    <h2>User emails:</h2>
+    <div *ngIf="emails.length">
+      <app-chip-list-static [emails]="emails"></app-chip-list-static>
+    </div>
+  </app-card>
+</div>

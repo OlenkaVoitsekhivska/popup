@@ -1,0 +1,17 @@
+.dialog{
+   form{
+    display: flex;
+    flex-direction: column;
+
+   }
+}
+::ng-deep .cancel-btn{
+   margin-right:50px;
+}
+
+::ng-deep .notification .mat-mdc-card{
+   background-color: rgb(215, 243, 250) !important;
+   color: rgb(5, 68, 83) !important;
+   text-align: justify;
+   
+}

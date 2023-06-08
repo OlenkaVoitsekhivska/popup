@@ -1,0 +1,77 @@
+<div class="dialog">
+  <h1 mat-dialog-title>Duplicated emails detected!</h1>
+  <mat-divider></mat-divider>
+  <mat-dialog-content class="dialog__content">
+    <form action="" [formGroup]="form">
+      <div *ngIf="duplicateEmails$ | async as emails">
+        <div *ngIf="emails.length">
+          <h3>
+            The following {{ emails.length }} emails are duplicated in your
+            list.
+          </h3>
+          <app-input [disabled]="true">
+            <app-chip-list-static [emails]="emails"></app-chip-list-static
+          ></app-input>
+        </div>
+      </div>
+
+      <div *ngIf="existingEmails$ | async as emails">
+        <div *ngIf="emails.length">
+          <h3>
+            The following {{ emails.length }} emails already exist in the
+            system.
+          </h3>
+          <app-input [disabled]="true">
+            <app-chip-list-static [emails]="emails"></app-chip-list-static
+          ></app-input>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="newAllEmails$ | async as emails">
+        <div *ngIf="emails.length">
+          <h3>The new {{ emails.length }} emails</h3>
+          <app-input [disabled]="true">
+            <app-chip-list-static [emails]="emails"></app-chip-list-static
+          ></app-input>
+        </div>
+      </div> -->
+      <app-card class="notification">
+        <mat-card-content>
+          <mat-icon
+            aria-hidden="false"
+            aria-label="Example home icon"
+            fontIcon="info"
+          ></mat-icon>
+          <p>
+            If an email appears in a project more than once, the user will be
+            given additional test attempts.
+          </p></mat-card-content
+        >
+      </app-card>
+
+      <div>
+        <mat-divider></mat-divider>
+        <h3>How would you like to proceed?</h3>
+        <app-checkbox
+          label="Save all (duplicated and existing)"
+          formControlName="saveAllCheckbox"
+        ></app-checkbox>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="center">
+    <app-button
+      label="cancel"
+      mat-dialog-close
+      class="cancel-btn"
+      color="accent"
+    ></app-button>
+    <app-button
+      label="{{
+        checkboxState?.value ? 'Save all emails' : 'Save only unique'
+      }}"
+      (customSubmit)="handleSubmit()"
+    ></app-button>
+  </mat-dialog-actions>
+</div>
