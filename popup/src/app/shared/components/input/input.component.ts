@@ -17,8 +17,10 @@ export class InputComponent implements ControlValueAccessor {
   @Input() public label: string = '';
   @Input() public placeholder: string = '';
   @Input() public disabled: boolean = false;
-
   public value = '';
+
+  private touched = false;
+  private disabledInner = false;
 
   onChange = (val: string) => {};
 
@@ -29,7 +31,6 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   writeValue(val: string) {
-    console.log('from intpu', val);
     this.value = val;
   }
 
@@ -42,15 +43,13 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   markAsTouched() {
-    // if (!this.touched) {
-    //   this.onTouched();
-    //   this.touched = true;
-    // }
-    console.log();
+    if (!this.touched) {
+      this.onTouched();
+      this.touched = true;
+    }
   }
 
   setDisabledState(disabled: boolean) {
-    // this.disabled = disabled;
-    console.log();
+    this.disabledInner = disabled;
   }
 }

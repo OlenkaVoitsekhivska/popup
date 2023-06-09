@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  Subject,
-  distinctUntilChanged,
-  shareReplay,
-} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +18,7 @@ export class DialogService {
 
   public existingForDisplay$ = this.existingForDisplay.asObservable();
 
-  showDialog = new BehaviorSubject<boolean>(false);
+  private showDialog = new BehaviorSubject<boolean>(false);
   public showDialog$ = this.showDialog.asObservable();
 
   private newEmail = new BehaviorSubject<string[]>([]);
@@ -59,12 +54,16 @@ export class DialogService {
     }
 
     if (duplicates.length > 0 || existing.length > 0) {
-      console.log('dialog condition from service');
       this.showDialog.next(true);
     }
   }
 
-  findDuplicateEmails(emails: string[]): string[] {
+  writeToExistingEmails(emails: string[]) {
+    this.existingEmails = [...this.existingEmails, ...emails];
+    this.existingForDisplay.next(this.existingEmails);
+  }
+
+  private findDuplicateEmails(emails: string[]): string[] {
     let duplicateEmails: string[] = [];
     const uniqueEmails = new Set<string>();
 
@@ -80,7 +79,10 @@ export class DialogService {
     return duplicateEmails;
   }
 
-  findCommonEmails(existingEmails: string[], newEmails: string[]): string[] {
+  private findCommonEmails(
+    existingEmails: string[],
+    newEmails: string[]
+  ): string[] {
     const commonEmails: string[] = [];
 
     for (const email of newEmails) {
@@ -89,10 +91,5 @@ export class DialogService {
       }
     }
     return [...new Set(commonEmails)];
-  }
-
-  writeToExistingEmails(emails: string[]) {
-    this.existingEmails = [...this.existingEmails, ...emails];
-    this.existingForDisplay.next(this.existingEmails);
   }
 }

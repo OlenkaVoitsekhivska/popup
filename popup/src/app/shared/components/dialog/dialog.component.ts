@@ -7,15 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  Observable,
-  Subscription,
-  combineLatest,
-  distinctUntilChanged,
-  map,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { Observable, Subscription, combineLatest, map, tap } from 'rxjs';
 import { DialogService } from '../../services/dialog.service';
 
 @Component({
@@ -25,12 +17,15 @@ import { DialogService } from '../../services/dialog.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent implements OnInit, OnDestroy {
-  public form!: FormGroup;
-  public existingEmails$!: Observable<string[]>;
-  public duplicateEmails$!: Observable<string[]>;
-  public newAllEmails$!: Observable<string[]>;
+  public form: FormGroup;
+  public existingEmails$: Observable<string[]>;
+  public duplicateEmails$: Observable<string[]>;
+  public newAllEmails$: Observable<string[]>;
+  public chipInputConfig = {
+    isDisabled: true,
+  };
 
-  private submitSubscription!: Subscription;
+  private submitSubscription: Subscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -52,11 +47,7 @@ export class DialogComponent implements OnInit, OnDestroy {
       this.submitSubscription.unsubscribe();
     }
     this.dialogService.nextEmptyIntoNewEmails();
-
     this.checkboxState.reset();
-    // this.dialogService.toggleDialogState(false);
-
-    console.log('fall of the house ');
   }
 
   get checkboxState() {
@@ -73,13 +64,12 @@ export class DialogComponent implements OnInit, OnDestroy {
         tap(([newEms, existingEms]) => {
           if (this.checkboxState.value === true) {
             this.dialogService.writeToExistingEmails(newEms);
-            // this.closeDialog();
           } else {
             const filteredNew = [...new Set(newEms)].filter(
               (em) => !existingEms.includes(em)
             );
+
             this.dialogService.writeToExistingEmails(filteredNew);
-            // this.closeDialog();
           }
           this.closeDialog();
         })

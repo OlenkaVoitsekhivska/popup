@@ -1,11 +1,10 @@
-.chip-list {
-    width: 100%;
-}
-
 .form-view {
     padding: 150px 0 0;
     width: 100%;
     display: flex;
     flex-direction: column;
     gap:50px;
+    .chip-list {
+        width: 100%;
+    }
 }

@@ -9,7 +9,7 @@
             The following {{ emails.length }} emails are duplicated in your
             list.
           </h3>
-          <app-input [disabled]="true">
+          <app-input [disabled]="chipInputConfig.isDisabled">
             <app-chip-list-static [emails]="emails"></app-chip-list-static
           ></app-input>
         </div>
@@ -21,7 +21,7 @@
             The following {{ emails.length }} emails already exist in the
             system.
           </h3>
-          <app-input [disabled]="true">
+          <app-input [disabled]="chipInputConfig.isDisabled">
             <app-chip-list-static [emails]="emails"></app-chip-list-static
           ></app-input>
         </div>
@@ -44,10 +44,7 @@
       <div>
         <mat-divider></mat-divider>
         <h3>How would you like to proceed?</h3>
-        <!-- <app-checkbox
-          label="Save all (duplicated and existing)"
-          formControlName="saveAllCheckbox"
-        ></app-checkbox> -->
+
         <mat-checkbox formControlName="saveAllCheckbox"
           >Save all (duplicated and existing)</mat-checkbox
         >
