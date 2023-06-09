@@ -51,7 +51,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     this.dialogSubscription = this.dialogService.showDialog$.subscribe(
       (data) => {
-        if (data === true) {
+        if (data) {
           this.openDialog();
         } else {
           this.dialogService.writeToExistingEmails(this.emailsField?.value);
